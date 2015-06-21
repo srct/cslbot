@@ -564,4 +564,4 @@ class BotHandler():
         # special commands
         elif cmd == '%sreload' % cmdchar:
             if nick in admins:
-                send("Aye Aye Capt'n")
+                send("Yes, Admiral.")

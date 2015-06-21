@@ -54,8 +54,8 @@ def get_default(nick, session, handler, send, config, source):
         except (FileNotFoundError, geoip2.errors.AddressNotFoundError):
             pass
         # default to TJHSST
-        send("No default location for %s and unable to guess a location, defaulting to TJ (22312)." % nick)
-        return '22312'
+        send("No default location for %s and unable to guess a location, defaulting to Mason (22030)." % nick)
+        return '22030'
     else:
         return location
 
