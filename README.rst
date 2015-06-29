@@ -2,10 +2,10 @@
 CslBot
 ======
 
-.. image:: https://travis-ci.org/tjcsl/cslbot.svg?branch=master
-    :target: https://travis-ci.org/tjcsl/cslbot
+.. image:: https://travis-ci.org/srct/srct.svg?branch=master
+    :target: https://travis-ci.org/srct/srctbot
 
-A bot written by the TJHSST CSL for IRC. 
+A bot written by the TJHSST CSL for IRC, forked and modified to run on Slack's IRC bridge. 
 
 Support
 -------
@@ -17,7 +17,7 @@ That said, the bot devs hangout in #tjcsl-cslbot on freenode and are usually hap
 
 Documentation
 -------------
-See http://tjcsl.github.io/cslbot for api docs.
+See http://srct.github.io/srctbot for api docs.
 
 Setup
 -----
