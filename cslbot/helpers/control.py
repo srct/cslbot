@@ -25,13 +25,7 @@ def handle_chanserv(args):
 
 
 def handle_disable(args):
-    if args.cmd == "kick":
-        if not args.handler.kick_enabled:
-            args.send("Kick already disabled.")
-        else:
-            args.handler.kick_enabled = False
-            args.send("Kick disabled.")
-    elif args.cmd == "command":
+    if args.cmd == "command":
         if args.args:
             args.send(command.disable_command(args.args[0]))
         else:
@@ -56,13 +50,7 @@ def handle_disable(args):
 
 
 def handle_enable(args):
-    if args.cmd == "kick":
-        if args.handler.kick_enabled:
-            args.send("Kick already enabled.")
-        else:
-            args.handler.kick_enabled = True
-            args.send("Kick enabled.")
-    elif args.cmd == "command":
+    if args.cmd == "command":
         if args.args:
             args.send(command.enable_command(args.args[0]))
         else:
@@ -384,7 +372,7 @@ def handle_quote(args):
 def handle_help(args):
     args.send("quote <raw command>")
     args.send("cs|chanserv <chanserv command>")
-    args.send("disable|enable <kick|command <command>|hook <hook>|all <commands|hooks>|logging|chanlog>")
+    args.send("disable|enable <command <command>|hook <hook>|all <commands|hooks>|logging|chanlog>")
     args.send("show <guarded|issues|quotes|polls|pending|tumblr> <disabled|enabled> <commands|hooks>")
     args.send("accept|reject <issue|quote|poll> <num>")
     args.send("guard|unguard <nick>")
@@ -408,12 +396,12 @@ def init_parser(send, handler, db):
     cs_parser.set_defaults(func=handle_chanserv)
 
     disable_parser = subparser.add_parser('disable')
-    disable_parser.add_argument('cmd', choices=['kick', 'command', 'hook', 'logging', 'chanlog'])
+    disable_parser.add_argument('cmd', choices=['command', 'hook', 'logging', 'chanlog'])
     disable_parser.add_argument('args', nargs='*')
     disable_parser.set_defaults(func=handle_disable)
 
     enable_parser = subparser.add_parser('enable')
-    enable_parser.add_argument('cmd', choices=['kick', 'command', 'hook', 'logging', 'chanlog', 'all'])
+    enable_parser.add_argument('cmd', choices=['command', 'hook', 'logging', 'chanlog', 'all'])
     enable_parser.add_argument('args', nargs='*')
     enable_parser.set_defaults(func=handle_enable)
 
