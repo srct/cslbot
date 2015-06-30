@@ -15,16 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import time
-from datetime import datetime, timedelta
 from .orm import Log
-
-
-def handle_nick(handler, e):
-    with handler.db.session_scope() as session:
-        if handler.config['feature'].getboolean('nickkick'):
-            return do_kick(handler, session, e.target)
-        else:
-            return False
 
 
 def get_chain(session, nick, limit=0):
@@ -43,11 +34,3 @@ def get_chain(session, nick, limit=0):
     if chain:
         chain.insert(0, nick)
     return list(reversed(chain))
-
-
-def do_kick(handler, session, nick):
-    # only go 5 minutes back for identity crisis detection.
-    limit = datetime.now() - timedelta(minutes=5)
-    chain = get_chain(session, nick, limit.timestamp())
-    # more than 2 nick changes in 5 minutes.
-    return True if len(chain) > 3 else False

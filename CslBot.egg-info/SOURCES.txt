@@ -156,7 +156,6 @@ cslbot/hooks/babble.py
 cslbot/hooks/band.py
 cslbot/hooks/bob.py
 cslbot/hooks/butt.py
-cslbot/hooks/caps.py
 cslbot/hooks/ctf.py
 cslbot/hooks/note.py
 cslbot/hooks/reddit.py

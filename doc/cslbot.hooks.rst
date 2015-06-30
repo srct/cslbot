@@ -44,14 +44,6 @@ cslbot.hooks.butt module
     :undoc-members:
     :show-inheritance:
 
-cslbot.hooks.caps module
-------------------------
-
-.. automodule:: cslbot.hooks.caps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 cslbot.hooks.ctf module
 -----------------------
 

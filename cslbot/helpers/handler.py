@@ -25,7 +25,7 @@ import random
 import time
 import threading
 from irc import modes
-from . import admin, arguments, command, control, hook, identity, misc, orm, sql, textutils, tokens, workers
+from . import admin, arguments, command, control, hook, misc, orm, sql, textutils, tokens, workers
 
 
 class BotHandler():
@@ -33,7 +33,6 @@ class BotHandler():
     def __init__(self, config, connection, channels, confdir):
         """ Set everything up.
 
-        | kick_enabled controls whether the bot will kick people or not.
         | caps is a array of the nicks who have abused capslock.
         | abuselist is a dict keeping track of how many times nicks have used
         |   rate-limited commands.
@@ -51,7 +50,6 @@ class BotHandler():
         self.guarded = []
         self.ping_map = {}
         self.outputfilter = collections.defaultdict(list)
-        self.kick_enabled = True
         self.caps = []
         self.abuselist = {}
         self.flood_lock = threading.Lock()
@@ -306,35 +304,6 @@ class BotHandler():
                 self.connection.mode(target, modestring)
                 send('Mode %s on %s by the guard system' % (modestring, target), target=self.config['core']['ctrlchan'])
 
-    def do_kick(self, send, target, nick, msg, slogan=True):
-        """ Kick users.
-
-        | If kick is disabled, don't do anything.
-        | If the bot is not a op, rage at a op.
-        | Kick the user.
-        """
-        if not self.kick_enabled:
-            return
-        if target not in self.channels:
-            send("%s: you're lucky, private message kicking hasn't been implemented yet." % nick)
-            return
-        ops = list(self.channels[target].opers())
-        botnick = self.config['core']['nick']
-        if botnick not in ops:
-            ops = ['someone'] if not ops else ops
-            send(textutils.gen_creffett("%s: /op the bot" % random.choice(ops)), target=target)
-        elif random.random() < 0.01 and msg == "shutting caps lock off":
-            if nick in ops:
-                send("%s: HUEHUEHUE GIBE CAPSLOCK PLS I REPORT U" % nick, target=target)
-            else:
-                self.connection.kick(target, nick, "HUEHUEHUE GIBE CAPSLOCK PLS I REPORT U")
-        else:
-            msg = textutils.gen_slogan(msg).upper() if slogan else msg
-            if nick in ops:
-                send("%s: %s" % (nick, msg), target=target)
-            else:
-                self.connection.kick(target, nick, msg)
-
     def do_args(self, modargs, send, nick, target, source, name, msgtype):
         """ Handle the various args that modules need."""
         realargs = {}
@@ -347,7 +316,6 @@ class BotHandler():
                 'type': msgtype,
                 'botnick': self.connection.real_nickname,
                 'target': target if target[0] == "#" else "private",
-                'do_kick': lambda target, nick, msg: self.do_kick(send, target, nick, msg),
                 'is_admin': lambda nick: self.is_admin(send, nick),
                 'abuse': lambda nick, limit, cmd: self.abusecheck(send, nick, target, limit, cmd)}
         for arg in modargs:
@@ -443,9 +411,6 @@ class BotHandler():
                 self.do_log(channel, e.source.nick, e.target, 'nick')
             if e.target in self.admins:
                 self.update_nickstatus(e.target)
-            if identity.handle_nick(self, e):
-                for x in misc.get_channels(self.channels, e.target):
-                    self.do_kick(send, x, e.target, "identity crisis")
         elif e.type == 'nicknameinuse':
             self.connection.nick('Guest%d' % random.getrandbits(20))
         elif e.type == 'privnotice':
